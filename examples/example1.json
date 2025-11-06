@@ -1,0 +1,4 @@
+{
+  "include": ["renderer.json", "controls.json"],
+  "fullscreen": true
+}
