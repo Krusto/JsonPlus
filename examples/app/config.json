@@ -1,0 +1,12 @@
+{
+    "WorkingDirectory" : "cwd",
+    "AssetsDirectory" : "Assets",
+    "ShadersDirectory" : "Shaders/bin",
+    "TexturesDirectory" : "Textures",
+    "ConfigDirectory" : "Config",
+    "WindowName" : "Example Game",
+    "InitialWidth" : 1280,
+    "InitialHeight" : 720,
+    "LogLocation" : "Console",
+    "ApplicationConfig" : "Config/app.json"
+}

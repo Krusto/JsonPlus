@@ -1,5 +1,6 @@
 #pragma once
 
+#include <cstdio>
 #include <nlohmann/json.hpp>
 #include <fstream>
 #include <iostream>
@@ -64,7 +65,29 @@ namespace JsonPlus
         }
 
         // --- Handle "include" key ---
-        if (result.contains("include"))
+        if (result.contains("include_in_place"))
+        {
+            auto includeEntry = result["include_in_place"];
+            result.erase("include_in_place");
+
+            std::vector<std::string> includes;
+            if (includeEntry.is_string()) includes.push_back(includeEntry.get<std::string>());
+            else if (includeEntry.is_array())
+                for (auto& v: includeEntry) includes.push_back(v.get<std::string>());
+
+            for (const auto& inc: includes)
+            {
+                std::filesystem::path includePath = file_path.parent_path() / inc;
+                auto included_result = _LoadJsonFile(includePath, loaded);
+
+                if (std::holds_alternative<std::string>(included_result))
+                    return std::get<std::string>(included_result);// Propagate error
+
+                const auto& elements = std::get<nlohmann::json>(included_result);
+                result.merge_patch(elements);
+            }
+        }
+        else if (result.contains("include"))
         {
             auto includeEntry = result["include"];
             result.erase("include");

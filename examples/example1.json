@@ -1,4 +1,5 @@
 {
+  "include_in_place": "app/config.json",
   "include": ["renderer.json", "controls.json"],
   "fullscreen": true
 }
