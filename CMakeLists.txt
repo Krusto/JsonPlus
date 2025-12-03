@@ -47,42 +47,48 @@ endforeach()
 # Install rules
 # -------------------------------
 include(GNUInstallDirs)
-
-# Install the header-only target
-install(TARGETS JsonPlus
-    EXPORT JsonPlusTargets
-)
-
-# Install header files
-install(DIRECTORY include/ DESTINATION ${CMAKE_INSTALL_INCLUDEDIR})
-install(DIRECTORY Vendor/json/ DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}/nlohmann)
-
-# -------------------------------
-# Export configuration for find_package()
-# -------------------------------
-install(EXPORT JsonPlusTargets
-    FILE JsonPlusTargets.cmake
-    NAMESPACE JsonPlus::
-    DESTINATION ${CMAKE_INSTALL_LIBDIR}/cmake/JsonPlus
-)
-
 include(CMakePackageConfigHelpers)
+
+install(
+    DIRECTORY ${CMAKE_SOURCE_DIR}/JsonPlus/include/
+    DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}/JsonPlus
+    FILES_MATCHING PATTERN "*.h"
+)
+
+install(TARGETS JsonPlus
+    EXPORT JsonPlus_libTargets
+    LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR}
+    INCLUDES DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}
+)
+
+install(EXPORT JsonPlus_libTargets
+    FILE JsonPlus_lib-targets.cmake
+    NAMESPACE JsonPlus::
+    DESTINATION ${CMAKE_INSTALL_LIBDIR}/cmake
+)
+
 write_basic_package_version_file(
-    "${CMAKE_CURRENT_BINARY_DIR}/JsonPlusConfigVersion.cmake"
-    VERSION ${PROJECT_VERSION}
+    "${CMAKE_CURRENT_BINARY_DIR}/JsonPlus_lib-configVersion.cmake"
+    VERSION ${version}
     COMPATIBILITY AnyNewerVersion
 )
 
 configure_package_config_file(
-    "${CMAKE_CURRENT_SOURCE_DIR}/cmake/JsonPlusConfig.cmake.in"
-    "${CMAKE_CURRENT_BINARY_DIR}/JsonPlusConfig.cmake"
-    INSTALL_DESTINATION ${CMAKE_INSTALL_LIBDIR}/cmake/JsonPlus
+    ${CMAKE_CURRENT_SOURCE_DIR}/Config.cmake.in
+    "${CMAKE_CURRENT_BINARY_DIR}/JsonPlus_lib-config.cmake"
+    INSTALL_DESTINATION ${CMAKE_INSTALL_LIBDIR}/cmake
 )
 
-install(FILES
-    "${CMAKE_CURRENT_BINARY_DIR}/JsonPlusConfig.cmake"
-    "${CMAKE_CURRENT_BINARY_DIR}/JsonPlusConfigVersion.cmake"
-    DESTINATION ${CMAKE_INSTALL_LIBDIR}/cmake/JsonPlus
+install(
+    FILES
+    "${CMAKE_CURRENT_BINARY_DIR}/JsonPlus_lib-config.cmake"
+    "${CMAKE_CURRENT_BINARY_DIR}/JsonPlus_lib-configVersion.cmake"
+    DESTINATION ${CMAKE_INSTALL_LIBDIR}/cmake
+)
+
+export(EXPORT JsonPlus_libTargets
+    FILE "${CMAKE_CURRENT_BINARY_DIR}/cmake/JsonPlus_lib-targets.cmake"
+    NAMESPACE JsonPlus::
 )
 
 # -------------------------------
