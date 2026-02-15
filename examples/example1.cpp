@@ -12,7 +12,7 @@ int main()
     }
     else
     {
-        auto str = std::get<nlohmann::json>(config).dump(4);
+        auto str = std::get<nlohmann::ordered_json>(config).dump(4);
 
         std::cout << str << std::endl;
     }
