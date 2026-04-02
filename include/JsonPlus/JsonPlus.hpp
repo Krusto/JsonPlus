@@ -197,13 +197,14 @@ namespace JsonPlus
         }
     }
 
-    inline std::variant<nlohmann::ordered_json, std::string> Load(const std::filesystem::path& path)
+    inline std::variant<nlohmann::ordered_json, std::string> Load(const std::filesystem::path& path,
+                                                                  bool debugConsoleDump = false)
     {
         std::unordered_set<std::string> loaded;
 
         auto result = _LoadJsonFile(path, loaded);
 
-        if (std::holds_alternative<nlohmann::ordered_json>(result))
+        if (debugConsoleDump && std::holds_alternative<nlohmann::ordered_json>(result))
         {
             std::cout << std::get<nlohmann::ordered_json>(result).dump(4) << std::endl;
         }
