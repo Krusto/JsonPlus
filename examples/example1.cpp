@@ -1,20 +1,21 @@
 #include <JsonPlus/JsonPlus.hpp>
+#include <iostream>
 
 int main()
 {
 
     auto config = JsonPlus::Load("./example1.json");
 
-    if (std::holds_alternative<std::string>(config))
+    if (config.has_value())
     {
-        std::cout << std::get<std::string>(config) << std::endl;
-        return 0;
+        auto str = config.value().dump(4);
+
+        std::cout << str << std::endl;
     }
     else
     {
-        auto str = std::get<nlohmann::ordered_json>(config).dump(4);
-
-        std::cout << str << std::endl;
+        std::cerr << config.error() << std::endl;
+        return 1;
     }
     return 0;
 }
